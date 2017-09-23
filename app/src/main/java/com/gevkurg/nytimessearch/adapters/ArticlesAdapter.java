@@ -24,11 +24,11 @@ import butterknife.ButterKnife;
 
 public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
 
-    private List<Article> mArticls;
+    private List<Article> mArticles;
     private Context mContext;
 
     public ArticlesAdapter(Context context, List<Article> articles) {
-        mArticls = articles;
+        mArticles = articles;
         mContext = context;
     }
 
@@ -55,7 +55,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
     @Override
     public void onBindViewHolder(ArticlesAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        Article article = mArticls.get(position);
+        Article article = mArticles.get(position);
 
         // Set item views based on your views and data model
         TextView tvHeadline = viewHolder.tvHeadline;
@@ -85,7 +85,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
-        return mArticls.size();
+        return mArticles.size();
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -115,12 +115,17 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         public void onClick(View view) {
             int position = getAdapterPosition(); // gets item position
             if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
-                Article article = mArticls.get(position);
+                Article article = mArticles.get(position);
 
                 Intent intent = new Intent(getContext(), ArticleActivity.class);
                 intent.putExtra("article", article);
                 getContext().startActivity(intent);
             }
         }
+    }
+
+    public void clear() {
+        mArticles.clear();
+        notifyDataSetChanged();
     }
 }

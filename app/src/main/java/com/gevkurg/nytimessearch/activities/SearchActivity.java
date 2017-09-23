@@ -1,25 +1,33 @@
 package com.gevkurg.nytimessearch.activities;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.gevkurg.nytimessearch.R;
 import com.gevkurg.nytimessearch.adapters.ArticlesAdapter;
+import com.gevkurg.nytimessearch.fragments.FilterFragment;
+import com.gevkurg.nytimessearch.helper.Helper;
 import com.gevkurg.nytimessearch.listeners.EndlessRecyclerViewScrollListener;
 import com.gevkurg.nytimessearch.models.Article;
 import com.gevkurg.nytimessearch.models.ArticlesResponse;
+import com.gevkurg.nytimessearch.models.SearchFilter;
 import com.gevkurg.nytimessearch.network.NYTimesClient;
 import com.gevkurg.nytimessearch.network.NYTimesService;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +37,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity
+        implements FilterFragment.SearchFilterUpdateListener {
+
+    private static final String LOG_TAG = SearchActivity.class.getSimpleName();
     public static final NYTimesService NEW_YORK_TIMES_SERVICE = NYTimesClient.getInstance()
             .getNYTimesService();
 
     private static final String TOP_STORIES_SEARCH_QUERIY = "Top Stories";
+    public static final String FILENAME = "mSearchFilter.txt";
 
-    @BindView(R.id.rvArticles) RecyclerView rvArticles;
-    private List<Article> articles;
-    private ArticlesAdapter articlesAdapter;
-    private String queryText;
+    @BindView(R.id.rvArticles)
+    RecyclerView mrvArticles;
+
+    private List<Article> mArticles;
+    private ArticlesAdapter mArticlesAdapter;
+    private String mQueryText;
+    private FilterFragment mFilterFragment;
+    private SearchFilter mSearchFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,22 +64,34 @@ public class SearchActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         ButterKnife.bind(this);
 
-        articles = new ArrayList<>();
-        articlesAdapter = new ArticlesAdapter(this, articles);
-        articlesAdapter.notifyDataSetChanged();
+        //mSearchFilter = loadSearchFilter();
+
+        mSearchFilter = new SearchFilter();
+        mArticles = new ArrayList<>();
+        mArticlesAdapter = new ArticlesAdapter(this, mArticles);
+        mArticlesAdapter.notifyDataSetChanged();
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        rvArticles.setAdapter(articlesAdapter);
-        rvArticles.setLayoutManager(gridLayoutManager);
+        mrvArticles.setAdapter(mArticlesAdapter);
+        mrvArticles.setLayoutManager(gridLayoutManager);
 
-        rvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
+        mrvArticles.addOnScrollListener(new EndlessRecyclerViewScrollListener(gridLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
-                fetchArticles(page, queryText);
+                fetchArticles(page);
             }
         });
 
-        fetchArticles(0, TOP_STORIES_SEARCH_QUERIY);
+        mQueryText = TOP_STORIES_SEARCH_QUERIY;
+        fetchArticles(0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!Helper.isNetworkAvailable(this) || !Helper.isOnline()) {
+            Helper.showSnackBar(mrvArticles, this);
+        }
     }
 
     @Override
@@ -74,55 +102,111 @@ public class SearchActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                queryText = query;
-                fetchArticles(0, query);
+                mQueryText = query;
+                mArticlesAdapter.clear();
+                fetchArticles(0);
                 searchView.clearFocus();
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String newText) {
+                mQueryText = newText;
                 return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_filter) {
+            showFiltereDialog();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void fetchArticles(int page, String query) {
-        Call<ArticlesResponse> articlesCall = NEW_YORK_TIMES_SERVICE
-                .getArticles(page, query);
-
-        articlesCall.enqueue(new Callback<ArticlesResponse>() {
-            @Override
-            public void onResponse(Call<ArticlesResponse> call, Response<ArticlesResponse> response) {
-                articles.addAll(response.body().getResponse().getArticles());
-                articlesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onFailure(Call<ArticlesResponse> call, Throwable t) {
-                String s = t.getMessage();
-            }
-        });
+    public void onFilterOptionsChanged(SearchFilter newSearchFilter) {
+        mSearchFilter = newSearchFilter;
+        //saveSearchFilter(mSearchFilter);
+        fetchArticles(0);
     }
 
-    private Boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnectedOrConnecting();
+    private void showFiltereDialog() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        mFilterFragment = FilterFragment.newInstance("Search Filter Options");
+        Bundle args = new Bundle();
+        args.putParcelable(FilterFragment.FILTER_OPTIONS_KEY, mSearchFilter);
+        mFilterFragment.setArguments(args);
+        mFilterFragment.show(fragmentManager, "search_filters_fragment");
+    }
+
+    private void fetchArticles(int page) {
+        if (Helper.isNetworkAvailable(this) && Helper.isOnline()) {
+
+            if (!mQueryText.isEmpty()) {
+
+                String beginDate = mSearchFilter.getDateWithoutSeparator();
+                String sortOrder = mSearchFilter.getSortOrder() != null ?
+                        mSearchFilter.getSortOrder().name().toLowerCase() : null;
+                final String newDeskValues = mSearchFilter.getNewDeskValues();
+                String fq = newDeskValues != null ?
+                        String.format("news_desk:(%s)", newDeskValues) : null;
+
+
+                Call<ArticlesResponse> articlesCall = NEW_YORK_TIMES_SERVICE
+                        .getArticles(mQueryText, page, beginDate, sortOrder, fq);
+
+                articlesCall.enqueue(new Callback<ArticlesResponse>() {
+                    @Override
+                    public void onResponse(Call<ArticlesResponse> call, Response<ArticlesResponse> response) {
+                        if (response != null && response.body() != null) {
+                            mArticles.addAll(response.body().getResponse().getArticles());
+                            mArticlesAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArticlesResponse> call, Throwable t) {
+                        Log.d(LOG_TAG, "results:" + t.getMessage());
+                    }
+                });
+            }
+        } else {
+            Helper.showSnackBar(mrvArticles, this);
+        }
+    }
+
+    private void saveSearchFilter(SearchFilter filter) {
+        try {
+            FileOutputStream fos = this.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            ObjectOutputStream os = new ObjectOutputStream(fos);
+            os.writeObject(filter);
+            os.close();
+            fos.close();
+        } catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    private SearchFilter loadSearchFilter() {
+        SearchFilter filter = new SearchFilter();
+        try {
+            FileInputStream fis = this.openFileInput(FILENAME);
+            ObjectInputStream is = new ObjectInputStream(fis);
+            filter = (SearchFilter) is.readObject();
+            is.close();
+            fis.close();
+            return (filter);
+        } catch (ClassNotFoundException cnfe) {
+            Log.e("Exception", "ClassNotFoundException: " + cnfe.toString());
+        } catch (IOException e) {
+            Log.e("Exception", "IOException: " + e.toString());
+        }
+        return filter;
     }
 }

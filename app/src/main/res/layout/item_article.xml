@@ -4,12 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
-    app:cardCornerRadius="8dp"
-    app:cardElevation="4dp"
+    android:padding="@dimen/article_card_padding"
+    app:cardCornerRadius="@dimen/article_card_corner_radius"
+    app:cardElevation="@dimen/article_card_elevation"
     app:cardUseCompatPadding="false"
     android:background="@drawable/card_edge"
-    android:layout_margin="8dp">
+    android:layout_margin="@dimen/article_card_margin">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
 
         <ImageView
             android:id="@+id/ivArticleImage"
-            android:layout_width="75dp"
+            android:layout_width="@dimen/artice_card_image_width"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:adjustViewBounds="true"
@@ -43,7 +43,7 @@
             android:ellipsize="end"
             android:gravity="left"
             android:maxLines="4"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="@dimen/article_card_vertical_margin"
             tools:text="At nearly $1,000, Samsung’s new device is part of a new category of high-end smartphones with cutting-edge technology. But it has plenty of flaws." />
 
     </LinearLayout>
