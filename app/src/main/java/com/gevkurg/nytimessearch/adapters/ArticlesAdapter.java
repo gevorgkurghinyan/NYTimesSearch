@@ -62,6 +62,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         tvHeadline.setText(article.getHeadline().getMain());
         TextView tvSnippet = viewHolder.tvSnippet;
         tvSnippet.setText(article.getSnippet());
+        TextView tvPublishDate = viewHolder.tvPublishDate;
+        tvPublishDate.setText(article.getPublishDate().substring(0, article.getPublishDate().indexOf('T')));
         ImageView ivArticleImage = viewHolder.ivArticleImage;
         ivArticleImage.setImageResource(0);
 
@@ -99,6 +101,8 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         TextView tvHeadline;
         @BindView(R.id.tvSnippet)
         TextView tvSnippet;
+        @BindView(R.id.tvPublishDate)
+        TextView tvPublishDate;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview

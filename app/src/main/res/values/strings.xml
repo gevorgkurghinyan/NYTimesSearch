@@ -21,4 +21,6 @@
     <string name="sort_order_oldest">Oldest</string>
     <string name="no_internet_text">You are not connected to Internet.\n Check your internet connection</string>
     <string name="snackbar_internet_action_text">Turn on Internet</string>
+    <string name="request_failed_text">"Failed to get articles.Please try again!"</string>
+    <string name="share_title">Share</string>
 </resources>

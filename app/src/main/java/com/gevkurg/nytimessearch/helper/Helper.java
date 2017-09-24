@@ -39,13 +39,21 @@ public class Helper {
         return false;
     }
 
-    public static void showSnackBar(View view, Context context) {
+    public static void showSnackBarForInternetConnection(View view, Context context) {
         Snackbar.make(view,
                 R.string.no_internet_text,
                 Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.snackbar_internet_action_text,
                         getSnackBarActionOnClickListener(context))
                 .setActionTextColor(Color.YELLOW)
+                .setDuration(5000)
+                .show();
+    }
+
+    public static void showSnackBar(View view, Context context, int resourceId) {
+        Snackbar.make(view,
+                resourceId,
+                Snackbar.LENGTH_INDEFINITE)
                 .setDuration(5000)
                 .show();
     }

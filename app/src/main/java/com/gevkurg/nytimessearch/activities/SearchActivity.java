@@ -90,7 +90,7 @@ public class SearchActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         if (!Helper.isNetworkAvailable(this) || !Helper.isOnline()) {
-            Helper.showSnackBar(mrvArticles, this);
+            Helper.showSnackBarForInternetConnection(mrvArticles, this);
         }
     }
 
@@ -111,7 +111,6 @@ public class SearchActivity extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                mQueryText = newText;
                 return false;
             }
         });
@@ -123,7 +122,7 @@ public class SearchActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_filter) {
-            showFiltereDialog();
+            showFilterDialog();
             return true;
         }
 
@@ -133,10 +132,11 @@ public class SearchActivity extends AppCompatActivity
     public void onFilterOptionsChanged(SearchFilter newSearchFilter) {
         mSearchFilter = newSearchFilter;
         //saveSearchFilter(mSearchFilter);
+        mArticlesAdapter.clear();
         fetchArticles(0);
     }
 
-    private void showFiltereDialog() {
+    private void showFilterDialog() {
         FragmentManager fragmentManager = getSupportFragmentManager();
         mFilterFragment = FilterFragment.newInstance("Search Filter Options");
         Bundle args = new Bundle();
@@ -167,20 +167,23 @@ public class SearchActivity extends AppCompatActivity
                         if (response != null && response.body() != null) {
                             mArticles.addAll(response.body().getResponse().getArticles());
                             mArticlesAdapter.notifyDataSetChanged();
+                        } else {
+                            Helper.showSnackBar(mrvArticles, SearchActivity.this, R.string.request_failed_text);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ArticlesResponse> call, Throwable t) {
-                        Log.d(LOG_TAG, "results:" + t.getMessage());
+                        Helper.showSnackBar(mrvArticles, SearchActivity.this, R.string.request_failed_text);
                     }
                 });
             }
         } else {
-            Helper.showSnackBar(mrvArticles, this);
+            Helper.showSnackBarForInternetConnection(mrvArticles, this);
         }
     }
 
+    //TODO: save SearchFilter into the file
     private void saveSearchFilter(SearchFilter filter) {
         try {
             FileOutputStream fos = this.openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -193,6 +196,7 @@ public class SearchActivity extends AppCompatActivity
         }
     }
 
+    //TODO: get saved SearchFilter from the file.
     private SearchFilter loadSearchFilter() {
         SearchFilter filter = new SearchFilter();
         try {

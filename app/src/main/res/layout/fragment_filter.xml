@@ -10,7 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="@string/begin_date_title"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:layout_marginTop="@dimen/article_card_vertical_margin"/>
 
     <DatePicker
         android:id="@+id/dpBeginDate"
@@ -37,7 +38,11 @@
         android:layout_below="@+id/tvSortOrderTitle"
         android:layout_marginTop="@dimen/fragment_vertical_margin"
         android:entries="@array/sort_order_options"
-        android:prompt="@string/sort_order_prompt" />
+        android:prompt="@string/sort_order_prompt"
+        android:layout_marginLeft="@dimen/article_card_spinner_margin"
+        android:layout_marginStart="@dimen/article_card_spinner_margin"
+        android:layout_marginRight="@dimen/article_card_spinner_margin"
+        android:layout_marginEnd="@dimen/article_card_spinner_margin"/>
 
     <TextView
         android:id="@+id/tvNewsDeskTitle"
@@ -55,13 +60,16 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/tvNewsDeskTitle"
         android:layout_marginTop="@dimen/fragment_vertical_margin"
-        android:text="@string/chk_arts" />
+        android:text="@string/chk_arts"
+        android:layout_alignLeft="@+id/spSortOrder"
+        android:layout_alignStart="@+id/spSortOrder"/>
 
     <CheckBox
         android:id="@+id/cbFashionAndStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cbArts"
+        android:layout_alignLeft="@+id/spSortOrder"
+        android:layout_alignStart="@+id/spSortOrder"
         android:layout_below="@+id/cbArts"
         android:text="@string/chk_fashion_and_style" />
 
@@ -69,7 +77,8 @@
         android:id="@+id/cbSports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/cbArts"
+        android:layout_alignLeft="@+id/spSortOrder"
+        android:layout_alignStart="@+id/spSortOrder"
         android:layout_below="@+id/cbFashionAndStyle"
         android:text="@string/chk_sports" />
 
@@ -79,5 +88,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="@dimen/fragment_vertical_margin"
-        android:text="@string/Save" />
+        android:text="@string/Save"
+        android:background="@android:color/holo_green_dark"/>
 </RelativeLayout>

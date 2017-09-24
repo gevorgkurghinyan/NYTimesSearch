@@ -16,6 +16,8 @@ public class Article implements Parcelable {
     private String snippet;
     @SerializedName("web_url")
     private String webUrl;
+    @SerializedName("pub_date")
+    private String publishDate;
     @SerializedName("multimedia")
     private List<ArticleMedia> medias = new ArrayList<>();
 
@@ -26,6 +28,7 @@ public class Article implements Parcelable {
         this.headline.setMain(headline);
         this.snippet = in.readString();
         this.webUrl = in.readString();
+        this.publishDate = in.readString();
     }
 
     public String getId() {
@@ -44,6 +47,8 @@ public class Article implements Parcelable {
         return webUrl;
     }
 
+    public String getPublishDate() {return publishDate;}
+
     @SerializedName("multimedia")
     public List<ArticleMedia> getMultimedia() {
         return medias;
@@ -56,10 +61,11 @@ public class Article implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(this.id);
-        parcel.writeString(this.headline.getMain());
-        parcel.writeString(this.snippet);
-        parcel.writeString(this.webUrl);
+        parcel.writeString(id);
+        parcel.writeString(headline.getMain());
+        parcel.writeString(snippet);
+        parcel.writeString(webUrl);
+        parcel.writeString(publishDate);
     }
 
     public static final Parcelable.Creator<Article> CREATOR = new Parcelable.Creator<Article>() {

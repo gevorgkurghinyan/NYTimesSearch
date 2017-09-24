@@ -37,6 +37,15 @@
             tools:text="Premium Phone Screen, at a Premium Price" />
 
         <TextView
+            android:id="@+id/tvPublishDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="left"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            tools:text="2017-09-09" />
+
+        <TextView
             android:id="@+id/tvSnippet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
