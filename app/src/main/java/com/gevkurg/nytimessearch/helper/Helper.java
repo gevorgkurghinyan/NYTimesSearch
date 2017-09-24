@@ -13,25 +13,25 @@ import com.gevkurg.nytimessearch.R;
 
 import java.io.IOException;
 
-/**
- * Created by gkurghin on 9/22/17.
- */
-
 public class Helper {
     public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager =
-                (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         final NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnectedOrConnecting();
     }
 
+    /**
+     * On emulator this method randomly fails, so not using it for now.
+     *
+     */
     public static boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
         try {
             final java.lang.Process process = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
             int exitValue = process.waitFor();
             return (exitValue == 0);
-        }catch (IOException ex){
+        } catch (IOException ex) {
             ex.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();

@@ -22,7 +22,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHolder> {
-
     private List<Article> mArticles;
     private Context mContext;
 
@@ -42,10 +41,10 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         LayoutInflater inflater = LayoutInflater.from(context);
 
         // Inflate the custom layout
-        View contactView = inflater.inflate(R.layout.item_article, parent, false);
+        View articleView = inflater.inflate(R.layout.item_article, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(contactView);
+        ViewHolder viewHolder = new ViewHolder(articleView);
         return viewHolder;
     }
 
@@ -91,8 +90,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
+
         @BindView(R.id.ivArticleImage)
         ImageView ivArticleImage;
         @BindView(R.id.tvHeadline)
@@ -120,7 +118,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                 Article article = mArticles.get(position);
 
                 Intent intent = new Intent(getContext(), ArticleActivity.class);
-                intent.putExtra("article", article);
+                intent.putExtra(ArticleActivity.ARTICLE_DATA_KEY, article);
                 getContext().startActivity(intent);
             }
         }

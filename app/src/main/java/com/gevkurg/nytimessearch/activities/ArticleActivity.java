@@ -25,6 +25,8 @@ import butterknife.ButterKnife;
 
 public class ArticleActivity extends AppCompatActivity {
 
+    public static final String ARTICLE_DATA_KEY = "artcile";
+
     @BindView(R.id.wvArticle)
     WebView mwvArticle;
 
@@ -43,9 +45,9 @@ public class ArticleActivity extends AppCompatActivity {
         mwvArticle.getSettings().setLoadsImagesAutomatically(true);
         mwvArticle.getSettings().setJavaScriptEnabled(true);
         mwvArticle.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        mwvArticle.setWebViewClient(new MyBrowser());
+        mwvArticle.setWebViewClient(new ArticleBrowser());
 
-        Article article = getIntent().getParcelableExtra("article");
+        Article article = getIntent().getParcelableExtra(ARTICLE_DATA_KEY);
         mwvArticle.loadUrl(article.getWebUrl());
     }
 
@@ -75,7 +77,7 @@ public class ArticleActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class MyBrowser extends WebViewClient {
+    private class ArticleBrowser extends WebViewClient {
         @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {

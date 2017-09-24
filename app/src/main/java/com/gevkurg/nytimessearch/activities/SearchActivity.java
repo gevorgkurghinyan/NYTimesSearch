@@ -44,7 +44,7 @@ public class SearchActivity extends AppCompatActivity
     public static final NYTimesService NEW_YORK_TIMES_SERVICE = NYTimesClient.getInstance()
             .getNYTimesService();
 
-    private static final String TOP_STORIES_SEARCH_QUERIY = "Top Stories";
+    private static final String TOP_STORIES_SEARCH_QUERY = "Top Stories";
     public static final String FILENAME = "SearchFilter.txt";
 
     @BindView(R.id.rvArticles)
@@ -69,7 +69,6 @@ public class SearchActivity extends AppCompatActivity
         mSearchFilter = new SearchFilter();
         mArticles = new ArrayList<>();
         mArticlesAdapter = new ArticlesAdapter(this, mArticles);
-        mArticlesAdapter.notifyDataSetChanged();
         StaggeredGridLayoutManager gridLayoutManager =
                 new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mrvArticles.setAdapter(mArticlesAdapter);
@@ -82,14 +81,14 @@ public class SearchActivity extends AppCompatActivity
             }
         });
 
-        mQueryText = TOP_STORIES_SEARCH_QUERIY;
+        mQueryText = TOP_STORIES_SEARCH_QUERY;
         fetchArticles(0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!Helper.isNetworkAvailable(this) || !Helper.isOnline()) {
+        if (!Helper.isNetworkAvailable(this)) {
             Helper.showSnackBarForInternetConnection(mrvArticles, this);
         }
     }
@@ -146,7 +145,7 @@ public class SearchActivity extends AppCompatActivity
     }
 
     private void fetchArticles(int page) {
-        if (Helper.isNetworkAvailable(this) && Helper.isOnline()) {
+        if (Helper.isNetworkAvailable(this)) {
 
             if (!mQueryText.isEmpty()) {
 
@@ -156,7 +155,6 @@ public class SearchActivity extends AppCompatActivity
                 final String newDeskValues = mSearchFilter.getNewDeskValues();
                 String fq = newDeskValues != null ?
                         String.format("news_desk:(%s)", newDeskValues) : null;
-
 
                 Call<ArticlesResponse> articlesCall = NEW_YORK_TIMES_SERVICE
                         .getArticles(mQueryText, page, beginDate, sortOrder, fq);
@@ -168,7 +166,11 @@ public class SearchActivity extends AppCompatActivity
                             mArticles.addAll(response.body().getResponse().getArticles());
                             mArticlesAdapter.notifyDataSetChanged();
                         } else {
-                            Helper.showSnackBar(mrvArticles, SearchActivity.this, R.string.request_failed_text);
+                            if(response.code() == 429) {
+                                Helper.showSnackBar(mrvArticles, SearchActivity.this, R.string.request_failed_too_many_requests_text);
+                            } else {
+                                Helper.showSnackBar(mrvArticles, SearchActivity.this, R.string.request_failed_text);
+                            }
                         }
                     }
 

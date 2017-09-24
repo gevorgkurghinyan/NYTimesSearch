@@ -135,11 +135,9 @@ public class FilterFragment extends DialogFragment {
             for (String newsDeskValue : mSearchFilter.getNewsDeskValues()) {
                 if (newsDeskValue.equals(getString(R.string.chk_arts))) {
                     cbArts.setChecked(true);
-                }
-                if (newsDeskValue.equals(getString(R.string.chk_sports))) {
+                } else if (newsDeskValue.equals(getString(R.string.chk_sports))) {
                     cbSports.setChecked(true);
-                }
-                if (newsDeskValue.equals(getString(R.string.chk_fashion_and_style))) {
+                } else if (newsDeskValue.equals(getString(R.string.chk_fashion_and_style))) {
                     cbFashionAndStyle.setChecked(true);
                 }
             }
