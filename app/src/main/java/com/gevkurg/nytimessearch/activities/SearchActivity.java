@@ -45,7 +45,7 @@ public class SearchActivity extends AppCompatActivity
             .getNYTimesService();
 
     private static final String TOP_STORIES_SEARCH_QUERIY = "Top Stories";
-    public static final String FILENAME = "mSearchFilter.txt";
+    public static final String FILENAME = "SearchFilter.txt";
 
     @BindView(R.id.rvArticles)
     RecyclerView mrvArticles;

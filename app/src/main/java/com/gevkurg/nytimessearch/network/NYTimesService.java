@@ -1,6 +1,5 @@
 package com.gevkurg.nytimessearch.network;
 
-
 import com.gevkurg.nytimessearch.models.ArticlesResponse;
 
 import retrofit2.Call;

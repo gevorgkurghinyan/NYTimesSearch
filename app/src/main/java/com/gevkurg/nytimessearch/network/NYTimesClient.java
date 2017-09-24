@@ -4,7 +4,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NYTimesClient {
-    private final String API_KEY = "c65383152e094f4883e22c5ccf21709a";
     private final String API_BASE_URL = "http://api.nytimes.com/";
     private final NYTimesService nyTimesService;
     private static final NYTimesClient INSTANCE = new NYTimesClient();

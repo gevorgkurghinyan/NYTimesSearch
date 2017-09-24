@@ -25,7 +25,8 @@ import butterknife.ButterKnife;
 
 public class ArticleActivity extends AppCompatActivity {
 
-    @BindView(R.id.wvArticle) WebView wvArticle;
+    @BindView(R.id.wvArticle)
+    WebView mwvArticle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +40,13 @@ public class ArticleActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-        wvArticle.getSettings().setLoadsImagesAutomatically(true);
-        wvArticle.getSettings().setJavaScriptEnabled(true);
-        wvArticle.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-        wvArticle.setWebViewClient(new MyBrowser());
+        mwvArticle.getSettings().setLoadsImagesAutomatically(true);
+        mwvArticle.getSettings().setJavaScriptEnabled(true);
+        mwvArticle.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
+        mwvArticle.setWebViewClient(new MyBrowser());
 
         Article article = getIntent().getParcelableExtra("article");
-        wvArticle.loadUrl(article.getWebUrl());
+        mwvArticle.loadUrl(article.getWebUrl());
     }
 
     @Override
@@ -57,7 +58,7 @@ public class ArticleActivity extends AppCompatActivity {
         shareIntent.setType("text/plain");
 
         // pass in the URL currently being used by the WebView
-        shareIntent.putExtra(Intent.EXTRA_TEXT, wvArticle.getUrl());
+        shareIntent.putExtra(Intent.EXTRA_TEXT, mwvArticle.getUrl());
 
         miShare.setShareIntent(shareIntent);
         return super.onCreateOptionsMenu(menu);

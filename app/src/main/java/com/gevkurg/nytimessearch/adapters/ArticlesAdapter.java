@@ -1,6 +1,5 @@
 package com.gevkurg.nytimessearch.adapters;
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,7 +31,6 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
         mContext = context;
     }
 
-    // Easy access to the context object in the recyclerview
     private Context getContext() {
         return mContext;
     }

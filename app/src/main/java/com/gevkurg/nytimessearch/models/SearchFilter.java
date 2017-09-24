@@ -149,10 +149,6 @@ public class SearchFilter implements Parcelable {
         this.year = year;
     }
 
-    public boolean isDateSelected() {
-        return dateSelected;
-    }
-
     public void setDateSelected(boolean dateSelected) {
         this.dateSelected = dateSelected;
     }
