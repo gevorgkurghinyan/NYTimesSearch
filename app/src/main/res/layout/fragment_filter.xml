@@ -11,7 +11,8 @@
         android:layout_centerHorizontal="true"
         android:text="@string/begin_date_title"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-        android:layout_marginTop="@dimen/article_card_vertical_margin"/>
+        android:layout_marginTop="@dimen/article_card_vertical_margin"
+        android:textColor="@android:color/holo_green_dark"/>
 
     <DatePicker
         android:id="@+id/dpBeginDate"
@@ -29,7 +30,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/fragment_vertical_margin"
         android:text="@string/sort_order_tile"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/holo_green_dark"/>
 
     <Spinner
         android:id="@+id/spSortOrder"
@@ -52,7 +54,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/fragment_vertical_margin"
         android:text="@string/news_desk_title"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/holo_green_dark"/>
 
     <CheckBox
         android:id="@+id/cbArts"
