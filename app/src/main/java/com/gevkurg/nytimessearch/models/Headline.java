@@ -3,6 +3,9 @@ package com.gevkurg.nytimessearch.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
+@Parcel
 public class Headline {
     private String main;
     private String kicker;
@@ -10,6 +13,7 @@ public class Headline {
     public String getMain() {
         return main;
     }
+
     public void setMain(String value) {
         main = value;
     }

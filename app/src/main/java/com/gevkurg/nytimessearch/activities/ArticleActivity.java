@@ -20,6 +20,8 @@ import android.webkit.WebViewClient;
 import com.gevkurg.nytimessearch.R;
 import com.gevkurg.nytimessearch.models.Article;
 
+import org.parceler.Parcels;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -47,7 +49,10 @@ public class ArticleActivity extends AppCompatActivity {
         mwvArticle.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
         mwvArticle.setWebViewClient(new ArticleBrowser());
 
-        Article article = getIntent().getParcelableExtra(ARTICLE_DATA_KEY);
+        // we could just pass the web url to this activity, but the goal is to demonstrate
+        // the usage of Parcels library.
+        Article article = Parcels.unwrap(getIntent().getParcelableExtra(ARTICLE_DATA_KEY));
+
         mwvArticle.loadUrl(article.getWebUrl());
     }
 

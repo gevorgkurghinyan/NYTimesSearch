@@ -1,6 +1,9 @@
 package com.gevkurg.nytimessearch.models;
 
 
+import org.parceler.Parcel;
+
+@Parcel
 public class ArticleMedia {
     private static final String IMAGE_PREFIX = "http://www.nytimes.com/";
 

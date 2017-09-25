@@ -16,6 +16,8 @@ import com.gevkurg.nytimessearch.R;
 import com.gevkurg.nytimessearch.activities.ArticleActivity;
 import com.gevkurg.nytimessearch.models.Article;
 
+import org.parceler.Parcels;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -118,7 +120,7 @@ public class ArticlesAdapter extends RecyclerView.Adapter<ArticlesAdapter.ViewHo
                 Article article = mArticles.get(position);
 
                 Intent intent = new Intent(getContext(), ArticleActivity.class);
-                intent.putExtra(ArticleActivity.ARTICLE_DATA_KEY, article);
+                intent.putExtra(ArticleActivity.ARTICLE_DATA_KEY, Parcels.wrap(article));
                 getContext().startActivity(intent);
             }
         }
